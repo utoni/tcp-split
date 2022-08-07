@@ -104,13 +104,13 @@ class TCPStreamExtractor:
 
         flow = (create_forward_flow(pkt), create_reverse_flow(pkt))
         if not flow[0] in self.streams and\
-            not flow[1] in self.streams and is_syn_pkt(pkt):
+            not flow[1] in self.streams:
             self.streams [flow[0]] = TCPStream(pkt)
             self.streams [flow[1]] = self.streams [flow[0]]
             self.fwd_flows.add(flow[0])
             self.rev_flows.add(flow[1])
         elif flow[0] in self.streams:
-            self.streams[flow[0]].add_pkt(pkt)        
+            self.streams[flow[0]].add_pkt(pkt)
         return pkt
 
     def process_packets(self):

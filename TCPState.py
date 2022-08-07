@@ -67,9 +67,8 @@ class TCPStateMachine:
     def init(self, pkt):
         if not 'TCP' in pkt:
             raise Exception("Not a TCP Packet")
-        if not is_syn_pkt(pkt):
-            raise Exception("Not valid SYN")
-            
+
+        self.syn_seen = is_syn_pkt(pkt)
         self.flows = set((create_forward_flow(pkt), create_reverse_flow(pkt)))
         self.server = pkt['IP'].dst
         self.client = pkt['IP'].src
