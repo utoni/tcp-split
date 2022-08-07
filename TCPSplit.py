@@ -196,9 +196,11 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--length', type=int,
                         help='Split TCP payload every n bytes',
                         default=MAX_BYTES_PER_PACKET)
+    parser.add_argument('-b', '--bpf', type=str, help='BPF filter to apply',
+                        default=None)
     args = parser.parse_args()
 
-    tse = TCPStreamExtractor.TCPStreamExtractor(args.input)
+    tse = TCPStreamExtractor.TCPStreamExtractor(args.input, None, True, None, args.bpf)
     if args.summary is True:
         printStreams(tse)
 
@@ -211,4 +213,6 @@ if __name__ == '__main__':
         all_streams += tss.split()
 
     if args.output is not None:
+        if len(all_streams) == 0:
+            raise TCPSplitStreamException('No TCP streams found.')
         scapy.all.wrpcap(args.output, all_streams)
