@@ -39,14 +39,16 @@ class TCPSplitStream(object):
                             ', expected ' + str(TCPStream.TCPStream))
         self.stream = tcp_stream
         self.ordered_pkts = self.stream.get_order_pkts()
+        if len(self.ordered_pkts) == 0:
+            raise TCPSplitStreamException('No TCP packets found.')
         self.ip2dst = scapy.all.IP(src = self.stream.src, dst = self.stream.dst)
         self.ip2src = scapy.all.IP(src = self.stream.dst, dst = self.stream.src)
-        if self.stream.tcp_state.syn_seen is True:
+        if self.stream.tcp_state.syn_seen is True and len(self.ordered_pkts) >= 2:
             self.seq = self.ordered_pkts[0][scapy.all.TCP].seq # TCP-SYN
             self.ack = self.ordered_pkts[1][scapy.all.TCP].seq # TCP-SYN-ACK
         else:
             self.seq = self.ordered_pkts[0][scapy.all.TCP].seq
-            self.ack = self.ordered_pkts[1][scapy.all.TCP].ack
+            self.ack = self.ordered_pkts[0][scapy.all.TCP].ack
 
     def __generate_handshake(self):
         if self.stream.tcp_state.syn_seen is False:

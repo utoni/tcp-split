@@ -7,7 +7,7 @@ Split TCP segments of a stream into smaller ones using Scapy and PCAP files.
 Inspired and Copy&Paste from [scapy-tcp-extractor](https://github.com/deeso/scapy-tcp-extractor).
 
 ```shell
-usage: TCPSplit.py [-h] [-o OUTPUT] [-s] [-l LENGTH] input
+usage: TCPSplit.py [-h] [-o OUTPUT] [-s] [-l LENGTH] [-b BPF] input
 
 positional arguments:
   input                 PCAP input file
@@ -19,6 +19,7 @@ options:
   -s, --summary         Print found TCP Streams to stdout
   -l LENGTH, --length LENGTH
                         Split TCP payload every n bytes
+  -b BPF, --bpf BPF     BPF filter to apply
 ```
 
 You can use the `example.pcapng` which contains two TCP Streams with some ASCII content by typing:
